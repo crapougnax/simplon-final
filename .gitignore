@@ -22,7 +22,7 @@ pip-delete-this-directory.txt
 nb_work/
 sources/
 presentation_*.md
-deployment/model_*.pkl
+deployment/api/model_*.pkl
 deployment/mlflow.db
 deployment/mlflow-artifacts/
 deployment/prefect_db
