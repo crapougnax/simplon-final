@@ -45,14 +45,14 @@ Le projet repose sur une stack moderne et robuste :
 
 Une fois la stack démarrée, les services sont accessibles via les URLs configurées (Traefik) :
 
-| Service        | URL                                        | Description                                |
-| :------------- | :----------------------------------------- | :----------------------------------------- |
-| **Frontend**   | `https://simplon.dev.brad.team`            | Interface principale pour les utilisateurs |
-| **API Docs**   | `https://simplon-api.dev.brad.team/docs`   | Swagger UI pour tester l'API               |
-| **Grafana**    | `https://simplon-grafana.dev.brad.team`    | Monitoring (Login: `admin` / `picoro`)     |
-| **Prefect**    | `https://simplon-prefect.dev.brad.team`    | Dashboard d'orchestration des flux         |
-| **MLFlow**     | `https://simplon-mlflow.dev.brad.team`     | Experiment Tracking & Model Registry       |
-| **Prometheus** | `https://simplon-prometheus.dev.brad.team` | Accès brut aux métriques                   |
+| Service        | URL                                            | Description                                |
+| :------------- | :--------------------------------------------- | :----------------------------------------- |
+| **Frontend**   | `https://simplon.votre-domaine.com`            | Interface principale pour les utilisateurs |
+| **API Docs**   | `https://simplon-api.votre-domaine.com/docs`   | Swagger UI pour tester l'API               |
+| **Grafana**    | `https://simplon-grafana.votre-domaine.com`    | Monitoring (Login: `admin` / `picoro`)     |
+| **Prefect**    | `https://simplon-prefect.votre-domaine.com`    | Dashboard d'orchestration des flux         |
+| **MLFlow**     | `https://simplon-mlflow.votre-domaine.com`     | Experiment Tracking & Model Registry       |
+| **Prometheus** | `https://simplon-prometheus.votre-domaine.com` | Accès brut aux métriques                   |
 
 ## 🧪 Fonctionnalités Clés
 
