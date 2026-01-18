@@ -1,0 +1,130 @@
+services:
+  api:
+    build: ./api
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PREFECT_API_URL=http://prefect:4200/api
+    networks:
+      - simplon_net
+    ports:
+      - "8000:8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.simplon-api.rule=Host(`simplon-api.dev.brad.team`)"
+      - "traefik.http.routers.simplon-api.entrypoints=websecure"
+      - "traefik.http.routers.simplon-api.tls.certresolver=myresolver"
+      - "traefik.http.services.simplon-api.loadbalancer.server.port=8000"
+
+  frontend:
+    build: ./frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.simplon.rule=Host(`simplon.dev.brad.team`)"
+      - "traefik.http.routers.simplon.entrypoints=websecure"
+      - "traefik.http.routers.simplon.tls.certresolver=myresolver"
+      - "traefik.http.services.simplon.loadbalancer.server.port=8501"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+    networks:
+      - simplon_net
+    ports:
+      - "8501:8501"
+
+  prometheus:
+    build: ./monitoring
+    image: my-prometheus
+    volumes:
+      - prometheus_data:/prometheus
+    networks:
+      - simplon_net
+    ports:
+      - "9090:9090"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.simplon-prometheus.rule=Host(`simplon-prometheus.dev.brad.team`)"
+      - "traefik.http.routers.simplon-prometheus.entrypoints=websecure"
+      - "traefik.http.routers.simplon-prometheus.tls.certresolver=myresolver"
+      - "traefik.http.services.simplon-prometheus.loadbalancer.server.port=9090"
+
+  grafana:
+    build: ./monitoring/grafana
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana-simplon.rule=Host(`simplon-grafana.dev.brad.team`)"
+      - "traefik.http.routers.grafana-simplon.entrypoints=websecure"
+      - "traefik.http.routers.grafana-simplon.tls.certresolver=myresolver"
+      - "traefik.http.services.grafana-simplon.loadbalancer.server.port=3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=picoro
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - simplon_net
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.10.0
+    command: mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlflow-artifacts --host 0.0.0.0 --port 5000
+    ports:
+      - "5000:5000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.simplon-mlflow.rule=Host(`simplon-mlflow.dev.brad.team`)"
+      - "traefik.http.routers.simplon-mlflow.entrypoints=websecure"
+      - "traefik.http.routers.simplon-mlflow.tls.certresolver=myresolver"
+      - "traefik.http.services.simplon-mlflow.loadbalancer.server.port=5000"
+    volumes:
+      - mlflow_db:/mlflow
+      - mlflow_artifacts:/mlflow-artifacts
+    networks:
+      - simplon_net
+
+  prefect:
+    image: prefecthq/prefect:2-latest
+    command: prefect server start --host 0.0.0.0
+    ports:
+      - "4200:4200"
+    environment:
+      - PREFECT_UI_API_URL=https://simplon-prefect.dev.brad.team/api
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.simplon-prefect.rule=Host(`simplon-prefect.dev.brad.team`)"
+      - "traefik.http.routers.simplon-prefect.entrypoints=websecure"
+      - "traefik.http.routers.simplon-prefect.tls.certresolver=myresolver"
+      - "traefik.http.services.simplon-prefect.loadbalancer.server.port=4200"
+    volumes:
+      - prefect_data:/root/.prefect
+    networks:
+      - simplon_net
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    privileged: true
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /run/podman/podman.sock:/var/run/docker.sock:ro
+      - /sys:/sys:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /var/lib/containers:/var/lib/containers:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - simplon_net
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  mlflow_db:
+  mlflow_artifacts:
+  prefect_data:
+
+networks:
+  simplon_net:
+    driver: bridge

@@ -1,0 +1,9 @@
+
+fastapi
+uvicorn
+pandas
+scikit-learn
+joblib
+prometheus-fastapi-instrumentator
+mlflow==2.10.0
+prefect<3.0.0

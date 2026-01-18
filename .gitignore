@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# System
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Project Specific
+nb_work/
+sources/
+presentation_*.md
+deployment/model_*.pkl
+deployment/mlflow.db
+deployment/mlflow-artifacts/
+deployment/prefect_db
