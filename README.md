@@ -2,7 +2,7 @@
 
 Ce projet implémente une solution complète de **Machine Learning** (MLOps) pour prédire la réussite scolaire des élèves du secondaire (note G3). Il intègre et déploie un modèle prédictif dans une architecture conteneurisée, monitorée et orchestrée.
 
-## 🏗ure & Technologies
+## Architecture & Technologies
 
 Le projet repose sur une stack moderne et robuste :
 
@@ -17,7 +17,7 @@ Le projet repose sur une stack moderne et robuste :
 - **Proxy** : [Traefik](https://traefik.io/) (Reverse Proxy, SSL termination, et routage)
 - **Infrastructure** : Docker / Podman Compose
 
-## 🚀 Installation & Démarrage
+## Installation & Démarrage
 
 ### Prérequis
 
